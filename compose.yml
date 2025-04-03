@@ -1,0 +1,14 @@
+services:
+
+  # Golang app (Echo)
+  go:
+    container_name: go-echo
+    build:
+      context: .
+      dockerfile: infrastructure/golang/Dockerfile
+      target: dev
+    tty: true
+    volumes:
+      - ./app:/app
+    ports:
+      - ${CONTAINER_IP}:${APP_PORTS}:8080 # IPとPortを指定

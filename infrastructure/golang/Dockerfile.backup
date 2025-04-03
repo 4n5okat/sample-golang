@@ -1,0 +1,41 @@
+# dockerfileはマルチステージビルドを利用します。
+# docker composeまたはdocker buildするときに、(--target development, --target builder, --target staging, --target production)でビルドステージを指定することができます。
+## 開発環境
+FROM --platform=linux/amd64 golang:1.24 AS dev
+
+# ソースコードをコピー
+COPY /app /app
+WORKDIR /app
+
+# 環境変数の設定
+ENV TZ=UTC
+# ModuleモードをON
+ENV GO111MODULE=on
+
+RUN go mod download && go mod verify && go mod vendor
+
+# airのインストール
+RUN go install github.com/air-verse/air@latest
+
+CMD ["air", "-c", ".air.toml"]
+
+## コンパイル
+FROM --platform=linux/amd64 golang:1.24 AS builder
+
+# ソースコードをコピー
+COPY /app /app
+WORKDIR /app
+
+RUN go mod download
+
+# RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /cmd/server .
+
+
+FROM --platform=linux/amd64 debian:bullseye-slim
+
+WORKDIR /root/
+
+COPY --from=builder /cmd/server .
+
+CMD [ "cmd/server" ]

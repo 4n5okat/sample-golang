@@ -134,3 +134,9 @@ pull:
 #----------------------------------------------------
 ### container
 #----------------------------------------------------
+
+#### Golang App (Echo)
+
+# Golang App (Echo)コンテナにログイン
+login-go:
+	docker compose exec go bash

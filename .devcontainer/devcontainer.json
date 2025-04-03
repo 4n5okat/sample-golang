@@ -1,11 +1,11 @@
 {
-    "name": "devcontainer-",
+    "name": "devcontainer-go",
     "dockerComposeFile": [
         "../compose.yml"
     ],
     // "initializeCommand": "cd ../ & cp .env.example .env", // devcontainer実行前に実行したいコマンド
-    "service": "サービス名", // 起点となるコンテナのサービス名
-    "workspaceFolder": "カレントディレクトリパス",
+    "service": "go", // 起点となるコンテナのサービス名
+    "workspaceFolder": "/app",
     "customizations": {
       // カスタマイズ
       "vscode": {
